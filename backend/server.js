@@ -17,6 +17,8 @@ const jobRoutes = require("./routes/jobRoutes");
 // Use routes
 app.use("/api/jobs", jobRoutes);
 
+
+
 // Simple test route
 app.get("/test", (req, res) => {
   res.send("Test route working!");
@@ -24,6 +26,15 @@ app.get("/test", (req, res) => {
 
 // Connect to MongoDB and start server
 const PORT = process.env.PORT || 5000;
+
+const applicationRoutes = require("./routes/applicationRoutes");
+app.use("/api/applications", applicationRoutes);
+const candidateRoutes = require("./routes/candidateRoutes");
+app.use("/api/candidates", candidateRoutes);
+const searchRoutes = require('./routes/search');
+app.use('/api', searchRoutes);
+
+
 
 mongoose
   .connect(process.env.MONGO_URI, {
