@@ -14,22 +14,14 @@ router.post("/", async (req, res) => {
 });
 
 // GET all jobs
-router.get('/', async (req, res) => {
-  const { title, location, skills } = req.query;
-  const query = {};
-
-  if (title) query.title = { $regex: title, $options: 'i' }; // case-insensitive
-  if (location) query.location = { $regex: location, $options: 'i' };
-  if (skills) query.requirements = { $in: [ new RegExp(skills, 'i') ] };
-
+router.get("/", async (req, res) => {
   try {
-    const jobs = await Job.find(query);
+    const jobs = await Job.find().sort({ postedAt: -1 });
     res.json(jobs);
   } catch (err) {
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: err.message });
   }
 });
-
 
 // GET single job by ID
 router.get("/:id", async (req, res) => {
@@ -42,29 +34,23 @@ router.get("/:id", async (req, res) => {
 });
 
 // PUT update job
-// PUT /api/jobs/:id -> update a job
-router.put('/:id', async (req, res) => {
+router.put("/:id", async (req, res) => {
   try {
-    const updatedJob = await Job.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
-    res.json(updatedJob);
+    const job = await Job.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(job);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to update job' });
+    res.status(400).json({ error: err.message });
   }
 });
 
-
-
-// DELETE /api/jobs/:id -> delete a job
-router.delete('/:id', async (req, res) => {
+// DELETE a job
+router.delete("/:id", async (req, res) => {
   try {
     await Job.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Job deleted successfully' });
+    res.json({ message: "Job deleted" });
   } catch (err) {
-    res.status(500).json({ error: 'Failed to delete job' });
+    res.status(500).json({ error: err.message });
   }
 });
-
 
 module.exports = router;

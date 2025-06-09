@@ -1,11 +1,10 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose';
 
 const applicationSchema = new mongoose.Schema({
-  jobId: { type: mongoose.Schema.Types.ObjectId, ref: "Job", required: true },
-  candidateId: { type: mongoose.Schema.Types.ObjectId, ref: "Candidate", required: true },
-  appliedAt: { type: Date, default: Date.now }
+  jobId: { type: mongoose.Schema.Types.ObjectId, ref: 'Job' },
+  candidateId: { type: mongoose.Schema.Types.ObjectId, ref: 'Candidate' },
+  appliedAt: { type: Date, default: Date.now },
+  status: { type: String, default: "applied" }
 });
 
-const Application = mongoose.model("Application", applicationSchema);
-
-module.exports = { Application };
+export default mongoose.model('Application', applicationSchema);

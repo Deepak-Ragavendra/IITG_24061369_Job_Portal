@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
+import './CandidateForm.css';
+
 
 const CandidateForm = () => {
   const [formData, setFormData] = useState({
@@ -35,19 +37,24 @@ const CandidateForm = () => {
   };
 
   return (
-    <div>
-      <h2>Register Candidate</h2>
-      {message && <p>{message}</p>}
-      <form onSubmit={handleSubmit}>
-        <input name="name" placeholder="Name" value={formData.name} onChange={handleChange} required /><br />
-        <input name="email" placeholder="Email" value={formData.email} onChange={handleChange} required /><br />
-        <input name="skills" placeholder="Skills (comma-separated)" value={formData.skills} onChange={handleChange} /><br />
-        <input name="education" placeholder="Education" value={formData.education} onChange={handleChange} /><br />
-        <input name="experience" placeholder="Experience" value={formData.experience} onChange={handleChange} /><br />
-        <button type="submit">Submit</button>
-      </form>
-    </div>
+  <div className="candidate-form-container">
+    <h2>Register Candidate</h2>
+    {message && (
+      <p className={`message ${message.includes('Error') ? 'error' : 'success'}`}>
+        {message}
+      </p>
+    )}
+    <form onSubmit={handleSubmit}>
+      <input name="name" placeholder="Name" value={formData.name} onChange={handleChange} required />
+      <input name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
+      <input name="skills" placeholder="Skills (comma-separated)" value={formData.skills} onChange={handleChange} />
+      <input name="education" placeholder="Education" value={formData.education} onChange={handleChange} />
+      <input name="experience" placeholder="Experience" value={formData.experience} onChange={handleChange} />
+      <button type="submit">Submit</button>
+    </form>
+  </div>
   );
+
 };
 
 export default CandidateForm;

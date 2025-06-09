@@ -1,28 +1,37 @@
 const express = require("express");
 const router = express.Router();
-const { Application } = require("../models/Application");
+const mongoose = require("mongoose");
 
-// POST /api/applications - create new application
+// Application Schema
+const applicationSchema = new mongoose.Schema({
+  jobId: { type: mongoose.Schema.Types.ObjectId, ref: "Job" },
+  candidateId: { type: mongoose.Schema.Types.ObjectId, ref: "Candidate" },
+  appliedAt: { type: Date, default: Date.now },
+});
+
+const Application = mongoose.model("Application", applicationSchema);
+
+// Apply for a job
 router.post("/", async (req, res) => {
   try {
-    const newApplication = new Application(req.body);
-    await newApplication.save();
-    res.status(201).json({ message: "Application submitted successfully" });
-  } catch (error) {
-    console.error("Error creating application:", error);
-    res.status(500).json({ error: "Internal server error" });
+    const { jobId, candidateId } = req.body;
+    const application = new Application({ jobId, candidateId });
+    await application.save();
+    res.status(201).json(application);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
 });
 
+// Get all applications
 router.get("/", async (req, res) => {
   try {
     const applications = await Application.find()
-      .populate("jobId")         // Populate job details
-      .populate("candidateId");  // Populate candidate details
+      .populate("jobId")
+      .populate("candidateId");
     res.json(applications);
-  } catch (error) {
-    console.error("Error fetching applications:", error);
-    res.status(500).json({ error: "Internal server error" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
